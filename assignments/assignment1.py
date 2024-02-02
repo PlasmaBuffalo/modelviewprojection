@@ -25,6 +25,7 @@ from OpenGL.GL import (
 import glfw
 import numpy as np
 from collections.abc import Callable
+from time import sleep
 
 
 if not glfw.init():
@@ -191,7 +192,7 @@ def use_plot_function_for_x_minus_onehalf_squared() -> None:
     def x_minus_onehalf_squared(x) -> float:
         return (x - 0.5) ** 2
 
-    glColor3f(1.0, 0.0, 0.0)
+    glColor3f(math.sin(elapsed_time_in_seconds), 0.0, 0.0)
     plot(fn=x_minus_onehalf_squared, domain=(-1, 1), interval=0.001)
 
 
@@ -219,18 +220,17 @@ def use_plot_function_with_unnamed_function(elapsed_time_in_seconds: float) -> N
         interval=0.01,
     )
 
-
-def draw_circle() -> None:
+def draw_circle(center_coordinates: tuple[float, float], color:tuple[float,float,float]) -> None:
     glBegin(GL_TRIANGLES)
 
     theta_increment: float = 0.01
 
-    glColor3f(1.0, 1.0, 1.0)
+    glColor3f(color[0], color[1], color[2])
 
     scale_radius: float = 0.1
 
     for theta in np.arange(0.0, 2 * math.pi, theta_increment):
-        glVertex2f(0.0, 0.0)
+        glVertex2f(center_coordinates[0], center_coordinates[1])
         glVertex2f(scale_radius * math.cos(theta), scale_radius * math.sin(theta))
         glVertex2f(
             scale_radius * math.cos(theta + theta_increment),
@@ -238,19 +238,30 @@ def draw_circle() -> None:
         )
     glEnd()
 
-def draw_fade_block(elapsed_time_in_seconds: float, center_of_square: tuple, block_size) -> None:
+def draw_block(center_of_square: tuple, block_size: float) -> None:
     glBegin(GL_QUADS)
-    # this will make the block color fade from green to black
-    glColor3f(0, 1.0-elapsed_time_in_seconds%1.0, 0)
-    
-    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
-    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
-    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
-    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
+    glVertex2f(center_of_square[0] - block_size/2, center_of_square[1] - block_size/2)
+    glVertex2f(center_of_square[0] + block_size/2, center_of_square[1] - block_size/2)
+    glVertex2f(center_of_square[0] + block_size/2, center_of_square[1] + block_size/2)
+    glVertex2f(center_of_square[0] - block_size/2, center_of_square[1] + block_size/2)
     glEnd()
 
 
+
+TARGET_FRAMERATE: int = 60
+
+time_at_beginning_of_previous_frame: float = glfw.get_time()
+
+current_x = 0
+
 while not glfw.window_should_close(window):
+    while (
+        glfw.get_time() < time_at_beginning_of_previous_frame + 1.0 / TARGET_FRAMERATE
+):
+        pass
+
+    time_at_beginning_of_previous_frame = glfw.get_time()
+
     glfw.poll_events()
 
     elapsed_time_in_seconds: float = glfw.get_time() - program_start_time
@@ -267,11 +278,19 @@ while not glfw.window_should_close(window):
     # use_plot_function_with_unnamed_function(elapsed_time_in_seconds)
     # draw_circle()
 
-    # divide the viewport into 16 squares and randomly use the draw_fade_block function
+    # ------------- my work starts here ----------------
+    # here we're going to make a bunch revolve around the center and change color
+    # we make a call to draw_circle on a point using trig functions and change the color based on the elapsed time variable
+    draw_circle((0.0, 0.5), (math.sin(elapsed_time_in_seconds), 0.0, 0.0))   # N
+    draw_circle((0.5, 0.5), (math.sin(elapsed_time_in_seconds+1), 0.0, 0.0)) # NE
+    draw_circle((0.0, 0.5), (math.sin(elapsed_time_in_seconds+2), 0.0, 0.0)) # E
+    draw_circle((-0.5, 0.5), (math.sin(elapsed_time_in_seconds+3), 0.0, 0.0)) # SE
+    draw_circle((0.0, -0.5), (math.sin(elapsed_time_in_seconds+4), 0.0, 0.0)) # S
+    draw_circle((-0.5, -0.5), (math.sin(elapsed_time_in_seconds+5), 0.0, 0.0)) # SW
+    draw_circle((-0.5, 0.0), (math.sin(elapsed_time_in_seconds+6), 0.0, 0.0)) # W
+    draw_circle((-0.5, 0.5), (math.sin(elapsed_time_in_seconds+7), 0.0, 0.0)) # NW
 
-
-
-
+    # ------------- ends here --------------------------
     glfw.swap_buffers(window)
 
 glfw.terminate()
