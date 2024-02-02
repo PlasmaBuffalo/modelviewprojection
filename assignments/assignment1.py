@@ -238,6 +238,17 @@ def draw_circle() -> None:
         )
     glEnd()
 
+def draw_fade_block(elapsed_time_in_seconds: float, center_of_square: tuple, block_size) -> None:
+    glBegin(GL_QUADS)
+    # this will make the block color fade from green to black
+    glColor3f(0, 1.0-elapsed_time_in_seconds%1.0, 0)
+    
+    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
+    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
+    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
+    glVertex2f(center_of_square-block_size/2, center_of_square-block_size/2)
+    glEnd()
+
 
 while not glfw.window_should_close(window):
     glfw.poll_events()
@@ -249,12 +260,17 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     draw_in_square_viewport()
-    draw_a_triangle()
-    draw_an_oscillating_triangle(elapsed_time_in_seconds)
-    draw_x_squared_with_precomputed_values()
-    use_plot_function_for_x_minus_onehalf_squared()
-    use_plot_function_with_unnamed_function(elapsed_time_in_seconds)
-    draw_circle()
+    # draw_a_triangle()
+    # draw_an_oscillating_triangle(elapsed_time_in_seconds)
+    # draw_x_squared_with_precomputed_values()
+    # use_plot_function_for_x_minus_onehalf_squared()
+    # use_plot_function_with_unnamed_function(elapsed_time_in_seconds)
+    # draw_circle()
+
+    # divide the viewport into 16 squares and randomly use the draw_fade_block function
+
+
+
 
     glfw.swap_buffers(window)
 
