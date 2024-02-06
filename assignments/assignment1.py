@@ -231,11 +231,12 @@ def draw_circle(center_coordinates: tuple[float, float], color:tuple[float,float
 
     for theta in np.arange(0.0, 2 * math.pi, theta_increment):
         glVertex2f(center_coordinates[0], center_coordinates[1])
-        glVertex2f(scale_radius * math.cos(theta), scale_radius * math.sin(theta))
+        glVertex2f(scale_radius * math.cos(theta)+center_coordinates[0], scale_radius * math.sin(theta)+center_coordinates[1])
         glVertex2f(
-            scale_radius * math.cos(theta + theta_increment),
-            scale_radius * math.sin(theta + theta_increment),
+            scale_radius * math.cos(theta + theta_increment)+center_coordinates[0],
+            scale_radius * math.sin(theta + theta_increment)+center_coordinates[1],
         )
+
     glEnd()
 
 def draw_block(center_of_square: tuple, block_size: float) -> None:
@@ -268,7 +269,7 @@ while not glfw.window_should_close(window):
 
     width, height = glfw.get_framebuffer_size(window)
     glViewport(0, 0, width, height)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # type: ignore
 
     draw_in_square_viewport()
     # draw_a_triangle()
@@ -279,16 +280,17 @@ while not glfw.window_should_close(window):
     # draw_circle()
 
     # ------------- my work starts here ----------------
+    PI = np.pi
     # here we're going to make a bunch of circles revolve around the center and change color
     # we make a call to draw_circle on a point using trig functions and change the color based on the elapsed time variable
     draw_circle((0.0, 0.5), (math.sin(elapsed_time_in_seconds), 0.0, 0.0))   # N
-    draw_circle((0.5, 0.5), (math.sin(elapsed_time_in_seconds+1), 0.0, 0.0)) # NE
-    draw_circle((0.0, 0.5), (math.sin(elapsed_time_in_seconds+2), 0.0, 0.0)) # E
-    draw_circle((-0.5, 0.5), (math.sin(elapsed_time_in_seconds+3), 0.0, 0.0)) # SE
-    draw_circle((0.0, -0.5), (math.sin(elapsed_time_in_seconds+4), 0.0, 0.0)) # S
-    draw_circle((-0.5, -0.5), (math.sin(elapsed_time_in_seconds+5), 0.0, 0.0)) # SW
-    draw_circle((-0.5, 0.0), (math.sin(elapsed_time_in_seconds+6), 0.0, 0.0)) # W
-    draw_circle((-0.5, 0.5), (math.sin(elapsed_time_in_seconds+7), 0.0, 0.0)) # NW
+    draw_circle((0.33, 0.33), (math.sin(elapsed_time_in_seconds+(PI/8)), 0.0, 0.0)) # NE
+    draw_circle((0.5, 0.0), (math.sin(elapsed_time_in_seconds+(PI/4)), 0.0, 0.0)) # E
+    draw_circle((0.33, -0.33), (math.sin(elapsed_time_in_seconds+(3*PI/8)), 0.0, 0.0)) # SE
+    draw_circle((0.0, -0.5), (math.sin(elapsed_time_in_seconds+(PI/2)), 0.0, 0.0)) # S
+    draw_circle((-0.33, -0.33), (math.sin(elapsed_time_in_seconds+(5*PI/8)), 0.0, 0.0)) # SW
+    draw_circle((-0.5, 0.0), (math.sin(elapsed_time_in_seconds+(3*PI/4)), 0.0, 0.0)) # W
+    draw_circle((-0.33, 0.33), (math.sin(elapsed_time_in_seconds+(7*PI/8)), 0.0, 0.0)) # NW
 
     # ------------- ends here --------------------------
     glfw.swap_buffers(window)
