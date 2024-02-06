@@ -279,7 +279,7 @@ while not glfw.window_should_close(window):
     # draw_circle()
 
     # ------------- my work starts here ----------------
-    # here we're going to make a bunch revolve around the center and change color
+    # here we're going to make a bunch of circles revolve around the center and change color
     # we make a call to draw_circle on a point using trig functions and change the color based on the elapsed time variable
     draw_circle((0.0, 0.5), (math.sin(elapsed_time_in_seconds), 0.0, 0.0))   # N
     draw_circle((0.5, 0.5), (math.sin(elapsed_time_in_seconds+1), 0.0, 0.0)) # NE
