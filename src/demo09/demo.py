@@ -18,7 +18,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
+# all the import statements
+# note how some modules are imported which must be used to call their functions
+# other imports are for functions themselves, which can be called without calling from the module
 from __future__ import annotations  # to appease Python 3.7-3.9
 import sys
 import math
@@ -46,27 +48,33 @@ import glfw
 
 from dataclasses import dataclass
 
+# if glfw doesn't initialize, we can't continue
 if not glfw.init():
     sys.exit()
 
+# opengl version specified for the graphics card/driver
 glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 1)
 glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 4)
 
+# create a windowed mode window and its OpenGL context
+# if the window isn't successfully created, we can't continue
 window = glfw.create_window(500, 500, "ModelViewProjection Demo 9", None, None)
 if not window:
     glfw.terminate()
     sys.exit()
 
+# make the window's context current, meaning that commands will affect this window
 glfw.make_context_current(window)
 
-
+# define closing the window as a function
 def on_key(window, key, scancode, action, mods):
     if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
         glfw.set_window_should_close(window, 1)
 
-
+# set the function on_key to be called when any key is pressed, i think
 glfw.set_key_callback(window, on_key)
 
+# first clear color is a dark gray
 glClearColor(0.0289, 0.071875, 0.0972, 1.0)
 
 
@@ -75,7 +83,7 @@ glLoadIdentity()
 glMatrixMode(GL_MODELVIEW)
 glLoadIdentity()
 
-
+# this function 
 def draw_in_square_viewport() -> None:
     glClearColor(0.2, 0.2, 0.2, 1.0)
     glClear(GL_COLOR_BUFFER_BIT)
