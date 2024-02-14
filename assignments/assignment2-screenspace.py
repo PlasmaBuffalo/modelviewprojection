@@ -90,11 +90,13 @@ class Vertex:
         )
 
     def ndc_to_screenspace_full_screen(self: Vertex, width: float, height: float):
+        # TODO - implement this method
         return self
 
     def ndc_to_screenspace_aspect_not_distorted(
         self: Vertex, width: float, height: float
     ):
+        # TODO - implement this method
         return self
 
 
