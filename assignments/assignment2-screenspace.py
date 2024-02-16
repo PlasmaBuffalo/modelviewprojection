@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
+# Liam Zalubas
 from __future__ import annotations  # to appease Python 3.7-3.9
 import sys
 import math
@@ -91,13 +91,50 @@ class Vertex:
 
     def ndc_to_screenspace_full_screen(self: Vertex, width: float, height: float):
         # TODO - implement this method
-        return self
+        # This was written to be read in the order the steps were written in, from top to bottom.
+        # Operations are all happening in screen space coordinates, beginning with NDC coordinates being shifted into the bottom left corner of screenspace.
+
+        #* first, we add 1 to x and y to move the range from [-1, 1] to [0, 2]
+        # vertex: Vertex = Vertex(x=(self.x + 1.0), y=self.y + 1.0)
+
+        #* now we scale x and y by 0.5 to move the range from [0, 2] to [0, 1]
+        # vertex = vertex.scale(scale_x=0.5, scale_y=0.5)
+
+        #* now we scale x and y by width and height to move the range from [0, 1] to [0, width] and [0, height]
+        # vertex = vertex.scale(scale_x=width, scale_y=height)
+
+        # above is my thought process, but we can do all of this in one step to keep the coding style of the vertex class consistent:
+        vertex: Vertex = Vertex(x=(self.x + 1.0)/2*width, y=(self.y + 1.0)/2*height)
+
+        return vertex
 
     def ndc_to_screenspace_aspect_not_distorted(
         self: Vertex, width: float, height: float
     ):
         # TODO - implement this method
-        return self
+        #* we can use all the same math as the previous method, but we need to scale x and y by the minimum of width and height
+        # This was written to be read in the order the steps were written in, from top to bottom.
+        # Operations are all happening in screen space coordinates, beginning with NDC coordinates being shifted into the bottom left corner of screenspace.
+
+        #* first, we add 1 to x and y to move the range from [-1, 1] to [0, 2]
+        vertex: Vertex = Vertex(x=(self.x + 1.0), y=self.y + 1.0)
+
+        #* now we scale x and y by 0.5 to move the range from [0, 2] to [0, 1]
+        vertex = vertex.scale(scale_x=0.5, scale_y=0.5)
+
+        #* before the next step, we need to find the minimum of width and height so we can scale by the same amount in both dimensions
+        min_size = width if width < height else height
+
+        #* we scale x and y by min_size to move the range from [0, 1] to [0, min_size] and [0, min_size]
+        vertex = vertex.scale(scale_x=min_size, scale_y=min_size)
+
+        #* to center the square in the window, we need to translate the vertex by the difference between the width and height divided by 2
+        if width < height:
+            vertex = vertex.translate(tx=0, ty=(height - width)/2)
+        elif height < width:
+            vertex = vertex.translate(tx=(width - height)/2, ty=0)
+
+        return vertex
 
 
 @dataclass
