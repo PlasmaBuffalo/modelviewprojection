@@ -284,7 +284,7 @@ while not glfw.window_should_close(window):
 
     # ------------- my work starts here ----------------
     PI = np.pi
-    # gotta do the offsets here
+    # TODO the offsets here
     draw_circle(0, 0, (1.0, 0.0, 0.0))   # 12:00
     draw_circle(0, 0, (1.0, 0.0, 0.0))   # 1:00
     draw_circle(0, 0, (1.0, 0.0, 0.0))   # 2:00
