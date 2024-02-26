@@ -286,8 +286,15 @@ def handle_inputs() -> None:
         glfw.get_key(window, glfw.KEY_RIGHT) == glfw.PRESS
         and glfw.get_key(window, glfw.KEY_LEFT_SHIFT) == glfw.PRESS
     ):
-        # TODO, remove the pass, and implement strafing
-        pass
+        sideways_camera_space = Vertex(x=3.0, y=0.0, z=0.0)
+        sideways_world_space = sideways_camera_space.rotate_y(camera.rot_y).translate(
+            tx=camera.position_worldspace.x,
+            ty=camera.position_worldspace.y,
+            tz=camera.position_worldspace.z,
+        )
+        camera.position_worldspace.x = sideways_world_space.x
+        camera.position_worldspace.y = sideways_world_space.y
+        camera.position_worldspace.z = sideways_world_space.z
     elif glfw.get_key(window, glfw.KEY_RIGHT) == glfw.PRESS:
         camera.rot_y -= 0.03
 
@@ -295,8 +302,17 @@ def handle_inputs() -> None:
         glfw.get_key(window, glfw.KEY_LEFT) == glfw.PRESS
         and glfw.get_key(window, glfw.KEY_LEFT_SHIFT) == glfw.PRESS
     ):
-        # TODO, remove the pass, and implement strafing
-        pass
+        # TODO: My work starts here
+        
+        sideways_camera_space = Vertex(x=-3.0, y=0.0, z=0.0)
+        sideways_world_space = sideways_camera_space.rotate_y(camera.rot_y).translate(
+            tx=camera.position_worldspace.x,
+            ty=camera.position_worldspace.y,
+            tz=camera.position_worldspace.z,
+        )
+        camera.position_worldspace.x = sideways_world_space.x
+        camera.position_worldspace.y = sideways_world_space.y
+        camera.position_worldspace.z = sideways_world_space.z
     elif glfw.get_key(window, glfw.KEY_LEFT) == glfw.PRESS:
         camera.rot_y += 0.03
 
